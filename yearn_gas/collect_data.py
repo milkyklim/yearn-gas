@@ -10,6 +10,7 @@ from tqdm import tqdm
 # london fork block: 12_965_000
 # london fork date: 2021-08-05
 
+LONDON_FORK_BLOCK = 12_965_000
 LONDON_FORK_DATE = "2021-08-05"
 DATAFOLDER = "data/raw"
 PREFIX = "blockchair_ethereum_blocks"
@@ -49,6 +50,8 @@ def pull_blocks():
 
 
 def create_db():
+    print("Creating database...")
+
     # open session once
     with db.db_session:
         for filename in tqdm(os.listdir(DATAFOLDER)):
@@ -56,7 +59,9 @@ def create_db():
                 with gzip.open(f"{DATAFOLDER}/{filename}", "rt") as f:
                     tsv_file = csv.DictReader(f, delimiter="\t")
                     for block in tsv_file:
-                        if not db.Block.exists(id=block["id"]):
+                        if int(
+                            block["id"]
+                        ) >= LONDON_FORK_BLOCK and not db.Block.exists(id=block["id"]):
                             fix_keys = [
                                 "hash",
                                 "miner",
