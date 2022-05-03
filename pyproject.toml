@@ -1,0 +1,53 @@
+[tool.poetry]
+name = "yearn-gas"
+version = "0.1.0"
+license = ""
+description = ""
+authors = ["milkyklim <10698619+milkyklim@users.noreply.github.com>"]
+repository = "https://github.com/milkyklim/yearn-gas"
+readme = "README.rst"
+keywords = [
+    "python",
+    "yearn",
+]
+documentation = "https://github.com/milkyklim/yearn-gas/README.rst"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.23.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+flake8 = "^3.8.1"
+black = "^22.3.0"
+# sphinx = "^3.1.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+pull_blocks = "yearn_gas.pull_blocks:main"
+populate_db = "yearn_gas.populate_db:main"
+
+[tool.black]
+line-length = 88
+max-complexity = 18
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.egg-info
+  | \.git
+  | \.hg
+  | \.ipynb_checkpoints
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
