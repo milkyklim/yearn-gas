@@ -27,8 +27,8 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-pull_blocks = "yearn_gas.pull_blocks:main"
-populate_db = "yearn_gas.populate_db:main"
+pull_blocks = "yearn_gas.collect_data:pull_blocks"
+create_db = "yearn_gas.collect_data:create_db"
 
 [tool.black]
 line-length = 88

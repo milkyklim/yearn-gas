@@ -1,7 +1,6 @@
 from datetime import date, datetime, time
 from decimal import Decimal
 from pony.orm import Database, PrimaryKey, Required, db_session
-from os import environ
 
 
 db = Database()
@@ -20,7 +19,7 @@ class Block(db.Entity):
     difficulty = Required(str)  # Required(int, size=64)
     gas_used = Required(int)
     gas_limit = Required(int)
-    logs_bloom = Required(bytes)  # ?
+    logs_bloom = Required(bytes)
     mix_hash = Required(bytes)
     nonce = Required(str)  # Required(int, size=64)
     receipts_root = Required(bytes)
@@ -47,6 +46,6 @@ class Block(db.Entity):
     reward_usd = Required(Decimal)
 
 
-db.bind("sqlite", "../data/db-test.sqlite", create_db=True)
+db.bind("sqlite", "../data/db.sqlite", create_db=True)
 # db.bind('sqlite', ':memory:', create_db=True)
 db.generate_mapping(create_tables=True)
