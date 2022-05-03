@@ -1,6 +1,9 @@
 import requests
-import datetime
 import os
+import gzip
+import datetime
+import csv
+from yearn_gas import db
 from tqdm import tqdm
 
 # tqdm example: https://github.com/tqdm/tqdm#hooks-and-callbacks
@@ -9,13 +12,14 @@ from tqdm import tqdm
 
 LONDON_FORK_DATE = "2021-08-05"
 DATAFOLDER = "data/raw"
+PREFIX = "blockchair_ethereum_blocks"
 
 
 def url(d):
     return f"https://gz.blockchair.com/ethereum/blocks/blockchair_ethereum_blocks_{d}.tsv.gz"
 
 
-def main():
+def pull_blocks():
     print("Pulling blocks...")
 
     if not os.path.exists(DATAFOLDER):
@@ -42,6 +46,37 @@ def main():
                     f.write(chunk)
 
         cur += datetime.timedelta(days=1)
+
+
+def create_db():
+    # open session once
+    with db.db_session:
+        for filename in tqdm(os.listdir(DATAFOLDER)):
+            if filename.startswith(PREFIX):
+                with gzip.open(f"{DATAFOLDER}/{filename}", "rt") as f:
+                    tsv_file = csv.DictReader(f, delimiter="\t")
+                    for block in tsv_file:
+                        if not db.Block.exists(id=block["id"]):
+                            fix_keys = [
+                                "hash",
+                                "miner",
+                                "extra_data_hex",
+                                "logs_bloom",
+                                "mix_hash",
+                                "receipts_root",
+                                "sha3_uncles",
+                                "state_root",
+                                "transactions_root",
+                            ]
+
+                            for k in fix_keys:
+                                block[k] = block[k].encode()
+
+                            db.Block(**block)
+
+
+def main():
+    pass
 
 
 if __name__ == "__main__":
