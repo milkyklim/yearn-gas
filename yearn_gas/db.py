@@ -1,4 +1,4 @@
-from datetime import date, datetime, time
+from datetime import datetime
 from decimal import Decimal
 from pony.orm import Database, PrimaryKey, Required, db_session
 
@@ -47,5 +47,4 @@ class Block(db.Entity):
 
 
 db.bind("sqlite", "../data/db.sqlite", create_db=True)
-# db.bind('sqlite', ':memory:', create_db=True)
 db.generate_mapping(create_tables=True)
